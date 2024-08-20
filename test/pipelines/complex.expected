@@ -1,0 +1,76 @@
+variables:
+  TEST: 'helloworld'
+
+image: node:16.15.0-buster-slim
+
+stages:
+  - build
+  - deploy
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+      when: never
+    - if: $CI_COMMIT_BRANCH
+
+.demo:
+  stage: build
+  timeout: 10 minutes
+  interruptible: true
+  only:
+    refs:
+      - branches
+
+.job_template:
+  # Hidden yaml configuration that defines an anchor named 'job_configuration'
+  &job_configuration
+  services:
+    - postgres
+    - redis
+
+.w: &weird2
+  - world
+
+.root: &weird1
+  jans:
+    - hello
+    - *weird2
+
+.default_scripts: &default_scriptos
+  - ./default-script1.sh
+  - ./default-script2.sh
+
+build-app:
+  extends: .demo
+  script:
+    - npm install --quiet &> out.log
+    - npm run init-db ${API_TOKEN} ${CI_API_V4_URL} 2410564 54039065
+    - npm run build
+    - *default_scriptos
+  rules:
+    - if: $API_TOKEN
+  artifacts:
+    when: always
+    expire_in: 1 hour
+    paths:
+      - build
+      - out.log
+
+jan-job:
+  timeout: 10 minutes
+  interruptible: true
+  script: echo hello
+
+pages:
+  <<: *job_configuration # Add the contents of the 'job_configuration' alias
+  stage: deploy
+  image: busybox
+  script:
+    - rm -rf public
+    - mv build public
+  artifacts:
+    paths:
+      - public
+  only:
+    - master

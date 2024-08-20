@@ -1,0 +1,9 @@
+workflow:
+  rules:
+    - when: never
+
+.template:
+  script: echo hello
+
+.anchor: &anchor
+  script: echo hello

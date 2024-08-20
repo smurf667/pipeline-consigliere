@@ -1,0 +1,16 @@
+# just because it is possible...
+include: 'https://raw.githubusercontent.com/smurf667/code-roulette/master/.gitlab-ci.yml'
+
+# this overrides
+include:
+  - local: '/test/pipelines/included.yaml'
+  - remote: 'https://raw.githubusercontent.com/smurf667/code-roulette/master/.gitlab-ci.yml'
+  - project: 'my-group/my-project'
+    ref: main 
+    file: '/templates/.gitlab-ci-template.yml'
+  - project: 'my-group/my-subgroup/my-project-2'
+    file:
+      - '/templates/.builds.yml'
+      - '/templates/.tests.yml'
+  - template: Auto-DevOps.gitlab-ci.yml
+  - component: $CI_SERVER_FQDN/my-org/security-components/secret-detection@1.0
