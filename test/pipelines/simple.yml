@@ -1,3 +1,6 @@
+stages:
+  - build
+
 workflow:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -5,11 +8,8 @@ workflow:
       when: never
     - if: $CI_COMMIT_BRANCH
 
-hello:
-  stage: build
-  image: nothing
+demo:
   timeout: 10 minutes
   interruptible: true
-  script: echo hello
-  rules:
-    - if: $DOIT
+  script:
+    - echo hello

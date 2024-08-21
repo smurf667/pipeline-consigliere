@@ -2,7 +2,7 @@
   "name": "pipeline-consigliere",
   "description": "A rules-based GitLab pipeline linter",
   "version": "0.1.0",
-  "homepage": "TODO",
+  "homepage": "https://github.com/smurf667/pipeline-consigliere",
   "private": true,
   "license": "MIT",
   "bin": {
