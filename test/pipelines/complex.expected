@@ -70,6 +70,7 @@ pages:
     - rm -rf public
     - mv build public
   artifacts:
+    expire_in: 1 minute
     paths:
       - public
   only:

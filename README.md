@@ -56,6 +56,7 @@ There are currently these rules:
 - `jobs-interruptible` - Jobs should be interruptible
 - `jobs-timeout` - Jobs should have timeouts (unfortunately, because of this [bug](https://gitlab.com/gitlab-org/gitlab/-/issues/213634))
 - `jobs-have-rules` - Jobs should have rules
+- `jobs-artifacts-expire` - Job artifacts should expire
 
 Built-in pipeline-level rules are located in [`lib/pipelineRules.mjs`](./lib/pipelineRules.mjs).
 There are currently these rules:

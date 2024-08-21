@@ -156,7 +156,7 @@ if (argv.find((arg) => arg === '--help') !== undefined) {
     .sort((a, b) => a.id.localeCompare(b.id))
     .forEach((rule) =>
       console.log(
-        `  ${c.yellow(rule.id.padEnd(padding, ' '))} ${c.greenBright(rule.title)}`,
+        `  ${c.yellow(rule.id.padEnd(1 + padding, ' '))} ${c.greenBright(rule.title)}`,
       ),
     );
   const pkg = JSON.parse(

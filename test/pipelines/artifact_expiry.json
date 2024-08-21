@@ -1,6 +1,6 @@
 {
   "error": 0,
-  "warn": 0,
+  "warn": 1,
   "info": 0,
-  "fixes": 0
+  "fixes": 1
 }
