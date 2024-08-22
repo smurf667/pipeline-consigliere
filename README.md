@@ -1,11 +1,11 @@
-# Pipeline Consigiliere
+# Pipeline Consigliere
 
 > [!CAUTION]
 > I consider this a prototype that may have to be improved for enterprise use.
 
 [![consigliere image generated with ChatGPT](./images/consigliere_small.png)](./images/consigliere.png)
 
-You may be the godfather of your pipelines, but you should listen to your consigiliere!
+You may be the godfather of your pipelines, but you should listen to your consigliere!
 Jokes aside, this is a rules-based linter for [GitLab](https://about.gitlab.com/) pipelines to make them follow best practices.
 
 The primary goal is to ensure pipelines are eco-friendly, i.e. to configure them such that
