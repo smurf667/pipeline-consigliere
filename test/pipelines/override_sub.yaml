@@ -1,0 +1,8 @@
+hello:
+  stage: build
+  image: nothing
+  timeout: 10 minutes
+  interruptible: true
+  script: echo hello
+  rules:
+    - if: $DOIT
