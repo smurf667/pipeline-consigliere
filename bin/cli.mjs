@@ -36,8 +36,8 @@ const copyObj = (obj, anchorMap) => {
   }
   return obj;
 };
-const resolve = (key, str, anchorMap, templateMap, jobMap) => {
-  const result = { ...jobMap[key], ...JSON.parse(str)[key] };
+const resolve = (key, str, anchorMap, templateMap, fullDoc) => {
+  const result = { ...fullDoc[key], ...JSON.parse(str)[key] };
   if (Object.hasOwn(result, 'extends')) {
     let names = result['extends'];
     if (!Array.isArray(names)) {
@@ -63,9 +63,8 @@ const resolve = (key, str, anchorMap, templateMap, jobMap) => {
   return copyObj(result, anchorMap);
 };
 
-const buildMaps = (doc, anchorMap, templateMap, jobMap) => {
-  // build anchorMap, templateMap and sub doc list
-  const result = [];
+const buildMaps = (doc, anchorMap, templateMap) => {
+  const includes = [];
   YAML.visit(doc, {
     Pair(_, node, path) {
       const depth = path.filter((e) => e instanceof YAML.YAMLMap).length - 1;
@@ -75,19 +74,12 @@ const buildMaps = (doc, anchorMap, templateMap, jobMap) => {
       if (node.key.value.startsWith('.') && depth === 0) {
         templateMap[node.key.value] = node.value.toJSON();
       }
-      if (!node.key.value.startsWith('.') && depth === 0 && !allKeywords.has(node.key.value)) {
-        if (!jobMap[node.key.value]) {
-          jobMap[node.key.value] = node.value.toJSON();
-        } else {
-          jobMap[node.key.value] = { ...node.value.toJSON(), ...jobMap[node.key.value] };
-        }
-      }
       if (node.key.value === 'include' && depth === 0) {
-        result.push(node.value.toJSON());
+        includes.push(node.value.toJSON());
       }
     },
   });
-  return result;
+  return includes;
 };
 
 const wordWrap = (text, indent) =>
@@ -215,17 +207,18 @@ const summary = {
 };
 const anchorMap = {};
 const templateMap = {};
-const jobMap = {};
 const subDocs = [];
-const includes = buildMaps(doc, anchorMap, templateMap, jobMap);
+let fullDoc = doc.toJSON();
+const includes = buildMaps(doc, anchorMap, templateMap);
 while (includes.length > 0) {
   const inc = includes.shift();
   if (typeof inc === 'string') {
     const subdocList = await handleInclude(inc);
     if (subdocList) {
       for (const subdoc of subdocList) {
+        fullDoc = { ...fullDoc, ...subdoc.toJSON() };
         subDocs.push(subdoc);
-        includes.push(...buildMaps(subdoc, anchorMap, templateMap, jobMap));
+        includes.push(...buildMaps(subdoc, anchorMap, templateMap));
       }
     }
   } else {
@@ -233,8 +226,9 @@ while (includes.length > 0) {
       const subdocList = await handleInclude(include);
       if (subdocList) {
         for (const subdoc of subdocList) {
+          fullDoc = { ...fullDoc, ...subdoc.toJSON() };
           subDocs.push(subdoc);
-          includes.push(...buildMaps(subdoc, anchorMap, templateMap, jobMap));
+          includes.push(...buildMaps(subdoc, anchorMap, templateMap));
         }
       }
     }
@@ -253,8 +247,8 @@ YAML.visit(doc, {
       node.key.value,
       obj,
       path.filter((e) => e instanceof YAML.YAMLMap).length - 1,
-      str.indexOf('"source"') >= 0 || Object.hasOwn(obj, 'extends') || jobMap[node.key.value]
-        ? () => resolve(node.key.value, str, anchorMap, templateMap, jobMap)
+      str.indexOf('"source"') >= 0 || Object.hasOwn(obj, 'extends') || fullDoc[node.key.value]
+        ? () => resolve(node.key.value, str, anchorMap, templateMap, fullDoc)
         : () => undefined,
       lineCounter.linePos(node.key.range[0]),
     );
