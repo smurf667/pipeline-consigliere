@@ -5,8 +5,7 @@ import defaultConfig from '../lib/config.mjs';
 import fs from 'fs';
 import prompts from 'prompts';
 import { handleInclude } from '../lib/includes.mjs';
-import { allKeywords } from '../lib/constants.mjs';
-import YAML from 'yaml';
+import YAML, { CST } from 'yaml';
 
 const configFile = `${process.cwd()}/consigliere-config.mjs`;
 const config = fs.existsSync(configFile)
@@ -36,6 +35,7 @@ const copyObj = (obj, anchorMap) => {
   }
   return obj;
 };
+
 const resolve = (key, str, anchorMap, templateMap, fullDoc) => {
   const result = { ...fullDoc[key], ...JSON.parse(str)[key] };
   if (Object.hasOwn(result, 'extends')) {
@@ -114,7 +114,7 @@ const handle = (summary, node, doc, key, obj, depth, resolver, linePos) => {
   config.rules.forEach((item) => {
     const { message, fix } =
       item.rule(key, obj, depth, resolver, node, doc) || {};
-    if (message) {
+    if (message && notIgnored(node, item.id)) {
       const lineInfo = `(${linePos.line}:${linePos.col})`;
       printMessage(item, message, lineInfo);
       summary[item.severity]++;
@@ -130,6 +130,9 @@ const handle = (summary, node, doc, key, obj, depth, resolver, linePos) => {
     }
   });
 };
+
+const notIgnored = (node, id) =>
+  !CST.stringify(node.srcToken).includes(`pipeline-consigliere-ignore ${id}`);
 
 const argv = process.argv.slice(2);
 if (argv.find((arg) => arg === '--help') !== undefined) {
@@ -247,7 +250,9 @@ YAML.visit(doc, {
       node.key.value,
       obj,
       path.filter((e) => e instanceof YAML.YAMLMap).length - 1,
-      str.indexOf('"source"') >= 0 || Object.hasOwn(obj, 'extends') || fullDoc[node.key.value]
+      str.indexOf('"source"') >= 0 ||
+        Object.hasOwn(obj, 'extends') ||
+        fullDoc[node.key.value]
         ? () => resolve(node.key.value, str, anchorMap, templateMap, fullDoc)
         : () => undefined,
       lineCounter.linePos(node.key.range[0]),
@@ -259,7 +264,7 @@ config.rules
   .filter((item) => Object.hasOwn(item, 'finally'))
   .forEach((item) => {
     const { message, fix } = item['finally'](doc, subDocs) || {};
-    if (message) {
+    if (message && notIgnored(doc.contents, item.id)) {
       printMessage(item, message);
       summary[item.severity]++;
       if (fix) {

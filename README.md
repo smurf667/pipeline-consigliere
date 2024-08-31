@@ -62,6 +62,24 @@ Built-in pipeline-level rules are located in [`lib/pipelineRules.mjs`](./lib/pip
 There are currently these rules:
 
 - `pipeline-workflow` - Pipelines should have a workflow definition
+- `workflows-have-autocancel` - Workflows should have an auto-cancel setting
+
+## Suppressing rule findings
+
+A rule finding can be ignored by putting `# pipeline-consigliere-ignore <rule-id>` into the element
+to be ignored. Example:
+
+```yaml
+workflow:
+  # pipeline-consigliere-ignore workflows-have-autocancel
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+      when: never
+    - if: $CI_COMMIT_BRANCH
+```
+
+This will prevent a finding on the workflow for `workflows-have-autocancel`.
 
 ## Customizing rules
 
