@@ -315,7 +315,12 @@ if (summary.fixes.length > 0) {
       console.log(String(doc));
     } else {
       console.log('\nWriting fixed file', outFile);
-      fs.writeFileSync(outFile, String(doc));
+      fs.writeFileSync(
+        outFile,
+        YAML.stringify(doc, {
+          lineWidth: 0,
+        }),
+      );
     }
   } else {
     console.log(
