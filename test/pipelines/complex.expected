@@ -62,6 +62,14 @@ jan-job:
   interruptible: true
   script: echo hello
 
+trigger-job:
+  interruptible: true
+  trigger:
+    include: child.yml
+    strategy: depend
+  rules:
+    - if: $TRIGGER
+
 pages:
   <<: *job_configuration # Add the contents of the 'job_configuration' alias
   stage: deploy

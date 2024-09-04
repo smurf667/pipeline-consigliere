@@ -110,6 +110,9 @@ const printMessage = (item, message, linePos) => {
   console.log(`  ${wordWrap(c.greenBright(item.description), '  ')}`);
 };
 
+const notIgnored = (node, id) =>
+  !CST.stringify(node.srcToken).includes(`pipeline-consigliere-ignore ${id}`);
+
 const handle = (summary, node, doc, key, obj, depth, resolver, linePos) => {
   config.rules.forEach((item) => {
     const { message, fix } =
@@ -130,9 +133,6 @@ const handle = (summary, node, doc, key, obj, depth, resolver, linePos) => {
     }
   });
 };
-
-const notIgnored = (node, id) =>
-  !CST.stringify(node.srcToken).includes(`pipeline-consigliere-ignore ${id}`);
 
 const argv = process.argv.slice(2);
 if (argv.find((arg) => arg === '--help') !== undefined) {
@@ -202,6 +202,14 @@ const doc = YAML.parseDocument(file, {
   lineCounter,
   keepSourceTokens: true,
 });
+if (doc.errors.length > 0) {
+  console.log(
+    `${c.yellowBright('[WARN]')} Parsing errors exist. Will attempt to continue.`,
+  );
+  doc.errors.forEach((err) =>
+    console.log(`${c.redBright(err.code)} ${c.yellowBright(err.message)}`),
+  );
+}
 const summary = {
   info: 0,
   warn: 0,
