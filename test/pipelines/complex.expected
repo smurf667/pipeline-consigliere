@@ -1,6 +1,9 @@
 variables:
   TEST: 'helloworld'
 
+default:
+  interruptible: true
+
 image: node:16.15.0-buster-slim
 
 stages:
@@ -59,7 +62,6 @@ build-app:
 
 jan-job:
   timeout: 10 minutes
-  interruptible: true
   script: echo hello
 
 trigger-job:
