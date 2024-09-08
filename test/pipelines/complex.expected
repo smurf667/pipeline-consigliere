@@ -72,7 +72,8 @@ trigger-job:
   rules:
     - if: $TRIGGER
 
-pages:
+mypages:
+  timeout: 10 minutes
   <<: *job_configuration # Add the contents of the 'job_configuration' alias
   stage: deploy
   image: busybox
