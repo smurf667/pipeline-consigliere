@@ -1,6 +1,6 @@
 {
   "error": 2,
-  "warn": 2,
-  "info": 2,
-  "fixes": 5
+  "warn": 4,
+  "info": 3,
+  "fixes": true
 }

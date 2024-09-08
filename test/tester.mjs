@@ -40,7 +40,7 @@ const errors = fs.readdirSync(root)
       }
       return `Error running ${args.join(' ')}`;
     }
-    if (expectations.fixes > 0) {
+    if (expectations.fixes) {
       const actualFile = `./build/${file}`;
       if (!fs.existsSync(actualFile)) {
         return `${actualFile} does not exist`;
