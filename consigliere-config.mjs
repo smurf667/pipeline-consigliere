@@ -34,7 +34,7 @@ const jobNamesMustBeInKebabCase = {
   },
   // called after a document was processed, this could for example be
   // used to check for the absence of keys; see pipelineRules.mjs for the 'workflow' check
-  finally: (doc, subdocs) => {
+  finally: async (doc, subdocs) => {
     console.log();
     console.log(
       jobNamesMustBeInKebabCase.id,

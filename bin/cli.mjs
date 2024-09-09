@@ -268,10 +268,9 @@ YAML.visit(doc, {
   },
 });
 
-config.rules
-  .filter((item) => Object.hasOwn(item, 'finally'))
-  .forEach((item) => {
-    const { message, fix } = item['finally'](doc, subDocs) || {};
+for (const item of config.rules) {
+  if (Object.hasOwn(item, 'finally')) {
+    const { message, fix } = (await item['finally'](doc, subDocs)) || {};
     if (message && notIgnored(doc.contents, item.id)) {
       printMessage(item, message);
       summary[item.severity]++;
@@ -284,7 +283,8 @@ config.rules
         });
       }
     }
-  });
+  }
+}
 console.log(
   `\nErrors: ${summary.error} Warnings: ${summary.warn} Notifications: ${summary.info}`,
 );

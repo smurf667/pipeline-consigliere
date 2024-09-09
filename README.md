@@ -63,6 +63,7 @@ There are currently these rules:
 
 - `pipeline-workflow` - Pipelines should have a workflow definition
 - `workflows-have-autocancel` - Workflows should have an auto-cancel setting
+- `pipeline-deprecated-globals` - Pipeline uses deprecated global keywords
 
 ## Suppressing rule findings
 

@@ -4,7 +4,7 @@ variables:
 default:
   interruptible: true
 
-image: node:16.15.0-buster-slim
+  image: node:16.15.0-buster-slim
 
 stages:
   - build
