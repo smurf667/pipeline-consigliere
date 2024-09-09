@@ -45,6 +45,8 @@ additional environment variables, such as:
 
 - `CI_API_V4_URL` - the GitLab API base path
 - `ACCESS_TOKEN` - a token which allows reading files from repositories
+- `DOCKER_V2_URL` - Docker registry V2 API URL (required for `--analyze`)
+- `DOCKER_TOKEN` - for analysis: a token to access Docker registry manifest information (Bearer, optional)
 
 When applying fixes, the input YAML file gets reformatted, but it will remain valid YAML.
 
@@ -64,6 +66,15 @@ There are currently these rules:
 - `pipeline-workflow` - Pipelines should have a workflow definition
 - `workflows-have-autocancel` - Workflows should have an auto-cancel setting
 - `pipeline-deprecated-globals` - Pipeline uses deprecated global keywords
+
+### Analysis rule
+
+The configuration switch `--analyze` adds an additional analyzing rule.
+This rule will try to collect pipeline and job durations and the sizes of the container
+images used by jobs. For the pipeline the container sizes are summed up; this is a
+hypothetical value which does not take caching effects into account.
+
+Obviously, shorter pipelines and job, and smaller container images are desirable.
 
 ## Suppressing rule findings
 
