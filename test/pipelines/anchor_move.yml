@@ -1,0 +1,25 @@
+default:
+  interruptible: true
+.cache_path: &extra_paths
+    - abc
+    - xyz
+.cache_key: &cache_key
+  key: hello
+cache:
+  <<: *cache_key # include this
+  paths:
+    <<: *extra_paths
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+      when: never
+    - if: $CI_COMMIT_BRANCH
+  auto_cancel:
+    on_new_commit: interruptible
+world:
+  stage: build
+  image: busybox
+  timeout: 1 second
+  rules:
+    - if: $WEIRD == 'true'
