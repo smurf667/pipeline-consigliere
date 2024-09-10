@@ -38,7 +38,7 @@ const jobNamesMustBeInKebabCase = {
     console.log();
     console.log(
       jobNamesMustBeInKebabCase.id,
-      `There were ${jobNamesMustBeInKebabCase.badCount} badly names jobs.`,
+      `There were ${jobNamesMustBeInKebabCase.badCount} badly named jobs.`,
     );
     if (jobNamesMustBeInKebabCase.badCount > 1000) {
       console.log('explanation of args', {
