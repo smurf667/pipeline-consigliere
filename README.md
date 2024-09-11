@@ -74,7 +74,7 @@ This rule will try to collect pipeline and job durations and the sizes of the co
 images used by jobs. For the pipeline the container sizes are summed up; this is a
 hypothetical value which does not take caching effects into account.
 
-Obviously, shorter pipelines and job, and smaller container images are desirable.
+Obviously, shorter pipelines and jobs, and smaller container images are desirable.
 
 ## Suppressing rule findings
 
