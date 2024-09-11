@@ -2,6 +2,7 @@
 
 import c from 'ansi-colors';
 import defaultConfig from '../lib/config.mjs';
+import { analyzer } from '../lib/analyze.mjs';
 import fs from 'fs';
 import prompts from 'prompts';
 import { handleInclude } from '../lib/includes.mjs';
@@ -107,7 +108,13 @@ const printMessage = (item, message, linePos) => {
     `${severityColor('[' + item.severity.toLocaleUpperCase() + ']')} ${c.whiteBright(item.title)} ${linePos ? linePos : ''}`,
   );
   console.log(`  ${c.blueBright(message)}`);
-  console.log(`  ${wordWrap(c.greenBright(item.description), '  ')}`);
+  if (item.description) {
+    if (item.literal) {
+      console.log(item.description);
+    } else {
+      console.log(`  ${wordWrap(c.greenBright(item.description), '  ')}`);
+    }
+  }
 };
 
 const notIgnored = (node, id) =>
@@ -151,6 +158,9 @@ if (argv.find((arg) => arg === '--help') !== undefined) {
   );
   console.log('  --out <output-file> file to write if --fix is used');
   console.log('  --help              this help');
+  console.log(
+    '  --analyze           adds job and pipeline analysis (time and size)',
+  );
   console.log(c.whiteBright('\nActive rules:'));
   const padding = defaultConfig.rules.reduce((max, rule) =>
     max > rule.id.length ? max : rule.id.length,
@@ -172,6 +182,10 @@ let filename = '.gitlab-ci.yml';
 if (argv.length > 0 && !argv[0].startsWith('-')) {
   filename = argv[0];
 }
+if (argv.find((arg) => arg === '--analyze') !== undefined) {
+  config.rules.unshift(analyzer);
+}
+
 const applyFix = argv.find((arg) => arg === '--fix') !== undefined;
 const interactive = argv.find((arg) => arg === '--interactive') !== undefined;
 const outIndex = argv.findIndex((arg) => arg === '--out');
