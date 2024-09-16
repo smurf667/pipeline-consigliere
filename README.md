@@ -11,7 +11,7 @@ Jokes aside, this is a rules-based linter for [GitLab](https://about.gitlab.com/
 The primary goal is to ensure pipelines are eco-friendly, i.e. to configure them such that
 they do not consume resources unnecessarily. There are many ways to achieve this, and the
 rules can only be opinionated. They are meant as hints on what to improve; it's not like
-it is making you an offer you cannot refuse!
+it is making an offer you cannot refuse!
 
 ## Running
 
