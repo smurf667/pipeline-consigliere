@@ -59,6 +59,7 @@ There are currently these rules:
 - `jobs-timeout` - Jobs should have timeouts (unfortunately, because of this [bug](https://gitlab.com/gitlab-org/gitlab/-/issues/213634))
 - `jobs-have-rules` - Jobs should have rules
 - `jobs-artifacts-expire` - Job artifacts should expire
+- `redundant-never-rule` - No need for redundant `- when: never` at the end of rules list
 
 Built-in pipeline-level rules are located in [`lib/pipelineRules.mjs`](./lib/pipelineRules.mjs).
 There are currently these rules:

@@ -1,0 +1,17 @@
+stages:
+  - build
+
+workflow:
+  auto_cancel:
+    on_new_commit: interruptible
+
+demo:
+  timeout: 10 minutes
+  interruptible: true
+  script:
+    - echo hello
+  rules:
+    - if: $SKIPIT == "true"
+      when: never
+    - if: $DOIT == "true"
+    - when: never
